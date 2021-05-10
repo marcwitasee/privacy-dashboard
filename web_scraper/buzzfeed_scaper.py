@@ -6,6 +6,10 @@ from selenium.common.exceptions import TimeoutException
 import re
 import pandas as pd
 import time
+# see 'https://stackoverflow.com/questions/60362018/macos-catalinav-10-15-3-error
+# -chromedriver-cannot-be-opened-because-the-de' if chromedriver not working on
+# mac
+
 
 option = webdriver.ChromeOptions()
 option.add_argument(" — incognito")

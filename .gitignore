@@ -2,3 +2,4 @@ proposal/
 chromedriver*
 web_scraper/venv/
 web_scraper/.idea/*
+notebooks/
