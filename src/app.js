@@ -25,6 +25,8 @@ function myVis(data) {
   // Static map elements
   const [visData, geoData] = data;
 
+  console.log(visData);
+
   const grouped = Object.values(
     visData.reduce((acc, row) => {
       if (!acc[row['state']]) {
@@ -44,8 +46,6 @@ function myVis(data) {
       return acc;
     }, {}),
   );
-
-  console.log(grouped);
 
   const mapWidth = 700;
   const mapHeight = 600;
@@ -108,4 +108,43 @@ function myVis(data) {
       .attr('fill', '#76B041')
       .attr('class', 'selected-circle state-circles');
   });
+}
+
+function barChart(data, state) {
+  const bcHeight = 300;
+  const bcWidth = 300;
+  const bcMargin = {top: 10, bottom: 20, left: 50, right: 5};
+  const bcPlotHeight = bcHeight - bcMargin.top - bcMargin.bottom;
+  const bcPlotWidth = bcWidth - bcMargin.left - bcMargin.right;
+
+  const stateData = data.filter(el => el.state == state);
+
+  const grouped = stateData.reduce((acc, row) => {
+    acc[row['search_count']] = (acc[row['search_count']] || 0) + 1;
+  }, {});
+
+  const bcSvg = select('#bar-chart')
+    .append('svg')
+    .attr('height', bcHeight)
+    .attr('width', bcWidth)
+    .append('g')
+    .attr('transform', `translate(${bcMargin.left}, ${bcMargin.top})`);
+
+  const bcXAxis = bcSvg
+    .append('g')
+    .attr('class', 'x-axis')
+    .attr('transform', `translate(0, ${bcPlotHeight})`);
+
+  const bcYAxis = bcSvg.append('g').attr('class', 'y-axis');
+
+  bcSvg
+    .append('g')
+    .attr('class', 'y-axis-label')
+    .attr('transform', `translate(-40, ${bcPlotHeight / 2})`)
+    .append('text')
+    .attr('text-anchor', 'middle')
+    .attr('transform', 'rotate(-90)')
+    .text('Percentage');
+
+  bcSvg.append('g').attr('class', 'rect-container');
 }
