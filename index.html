@@ -2,10 +2,50 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Scaffold</title>
+    <title>dashboard</title>
+    <link rel="stylesheet" href="src/main.css">
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div id="header">
+        <h1>Is Facial Recognition in Your Neighborhood?</h1>
+      </div>
+      <div id="main">
+        <div id="column-one">
+          <div id="map-title"><h2>Map Title</h2></div>
+          <div id="map"><img src="https://geology.com/world/united-states-map-with-state-names.gif" alt=""></div>
+          <div id="bar-chart-title"><h2>Bar Chart Title</h2></div>
+          <div id="bar-chart"><img src="https://apexcharts.com/wp-content/uploads/2018/05/basic-bar-chart.svg" alt=""></div>
+        </div>
+        <div id="column-two">
+          <div id="info-box-container">
+            <div id="info-box">
+              <div id="info-box-title">
+                <h3>How Does Facial Recognition Affect Your Privacy?</h3>
+              </div>
+              <p>Facial regcognition softwares are technologies that use artificial intelligence to identify faces in images and videos and match them with other faces stored in a database. As the map on the left shows, the use of facial recognition has exploded in the past few years, particularly among public agencies. Images collected from public spaces can be subject to the software.These technologies can be used to identify you in images by comparing your face with many other faces collected online (often through social media accounts without user permission). In some cases, public agencies have reportedly used facial recognition to identify, locate, and deport undocumented immigrants from the country. Community awareness and transparency of the use of such invasive technologies is essential to protecting your rights to sanctuary.</p>
+              <p>Click on a state on the map to see more information about the public agencies in that state that allegedly used Clearview AI's facial recognition software.</p>
+            </div>
+          </div>
+          <div id="learn-button">
+            <button>
+              <p>Learn More</p>
+            </button>
+          </div>
+          <div id="table-title"><h2>Table Title</h2></div>
+          <div id="agency-table">
+            <table>
+              <tr>
+                <th>Agency</th>
+                <th>Search Count</th>
+                <th>Comment</th>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="footer"></div>
+    </div>
     <script src="bundle.js"></script>
   </body>
 </html>

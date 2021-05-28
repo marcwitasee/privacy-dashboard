@@ -5,10 +5,100 @@ a {
 
 html,
 body {
-  background: #D6D6CE;
+  background: #F8F4F9;
   font-family: Verdana, Geneva, sans-serif;
+}
+
+h2 {
+  color: #4C5454;
+}
+
+#app {
+  border: 5px solid #4C5454;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   height: 100%;
-  margin: 0;
-  padding: 0;
+  border-radius: 10px;
+}
+
+#header {
+  height: 100px;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: #4C5454;
+}
+
+#header > h1 {
+  color: #F8F4F9;
+}
+
+#main {
+  display: flex;
+  width: 90%;
+  height: 100%;
+  justify-content: space-between;
+}
+
+#column-one {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#map > img {
+  width: 600px;
+  height: 500px;
+}
+
+#column-two {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 650px;
+}
+
+#info-box-container {
+  background-color: #FFC914;
+  opacity: 80%;
+  border-radius: 10px;
+  border: 1px solid black;
+  width: 80%;
+  margin-top: 50px;
+  min-width: 375px;
+}
+
+#info-box-title {
+  float: left;
+  width: 30%;
+  margin-left: 15px;
+  margin-right: 10px;
+}
+
+#info-box > p {
+  margin-left: 15px;
+  margin-right: 5px;
+}
+
+#learn-button {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#learn-button > button {
+  background-color: #FFC914;
+  border-radius: 10px;
+}
+
+#learn-button > button > p {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#footer {
+  width: 100%;
+  height: 100px;
+  background-color: #4C5454;
 }
