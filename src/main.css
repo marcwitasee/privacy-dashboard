@@ -11,6 +11,11 @@ body {
 
 h2 {
   color: #4C5454;
+  text-align: center;
+}
+
+#map-title > h4 {
+  text-align: center;
 }
 
 #app {
@@ -46,11 +51,17 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-right: 20px;
 }
 
 #map > img {
   width: 600px;
   height: 500px;
+}
+
+#bar-chart-title {
+  width: 550px;
+  margin-top: 25px;
 }
 
 #column-two {
@@ -97,8 +108,22 @@ h2 {
   font-weight: bold;
 }
 
+th {
+  border: 2px solid #D44D5C;
+  border-collapse: collapse;
+  background-color: #4C5454;
+  color: #F8F4F9;
+}
+
+td {
+  color: #4C5454;
+  border-bottom: 1px solid #D44D5C;
+  border-collapse: collapse;
+}
+
 #footer {
   width: 100%;
   height: 100px;
   background-color: #4C5454;
+  margin-top: 20px;
 }
