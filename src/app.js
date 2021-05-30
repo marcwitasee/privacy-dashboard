@@ -6,7 +6,9 @@ import {myExampleUtil} from './utils';
 import {select, selectAll} from 'd3-selection';
 import {geoPath, geoAlbersUsa, geoAzimuthalEquidistant} from 'd3-geo';
 import {csv, json} from 'd3-fetch';
-import {scaleQuantize} from 'd3-scale';
+import {scaleQuantize, scaleBand, scaleLinear} from 'd3-scale';
+import {extent} from 'd3-array';
+import {axisBottom, axisLeft} from 'd3-axis';
 
 // this command imports the css file, if you remove it your css wont be applied!
 import './main.css';
@@ -107,21 +109,49 @@ function myVis(data) {
     select(`#${event.target.id}`)
       .attr('fill', '#76B041')
       .attr('class', 'selected-circle state-circles');
+    select('#bar-chart > svg').remove();
+
+    barChart(visData, targetData.state);
   });
 }
 
 function barChart(data, state) {
   const bcHeight = 300;
   const bcWidth = 300;
-  const bcMargin = {top: 10, bottom: 20, left: 50, right: 5};
+  const bcMargin = {top: 0, bottom: 30, left: 50, right: 0};
   const bcPlotHeight = bcHeight - bcMargin.top - bcMargin.bottom;
   const bcPlotWidth = bcWidth - bcMargin.left - bcMargin.right;
 
   const stateData = data.filter(el => el.state == state);
 
-  const grouped = stateData.reduce((acc, row) => {
-    acc[row['search_count']] = (acc[row['search_count']] || 0) + 1;
-  }, {});
+  const grouped = Object.entries(
+    stateData.reduce((acc, row) => {
+      acc[row['search_count']] = (acc[row['search_count']] || 0) + 1;
+      return acc;
+    }, {}),
+  ).map(([cntRange, cnt]) => ({cntRange, cnt}));
+
+  console.log(grouped);
+
+  const xDomain = extent(grouped, d => d.cnt);
+  const yDomain = extent(grouped, d => d.cntRange);
+
+  const yScale = scaleBand()
+    .domain([
+      '1-5',
+      '6-10',
+      '11-50',
+      '51-100',
+      '101-500',
+      '501-1000',
+      '1001-5000',
+    ])
+    .range([0, bcPlotHeight]);
+  const xScale = scaleLinear()
+    .domain([0, xDomain[1]])
+    .range([0, bcPlotWidth]);
+
+  console.log(xDomain, yDomain);
 
   const bcSvg = select('#bar-chart')
     .append('svg')
@@ -144,7 +174,41 @@ function barChart(data, state) {
     .append('text')
     .attr('text-anchor', 'middle')
     .attr('transform', 'rotate(-90)')
-    .text('Percentage');
+    .text('Search Count');
 
-  bcSvg.append('g').attr('class', 'rect-container');
+  bcSvg
+    .append('g')
+    .attr('class', 'rect-container')
+    .selectAll('rect')
+    .data(grouped)
+    .join('rect')
+    .attr('y', d => {
+      console.log(yScale(d.cntRange));
+      return yScale(d.cntRange);
+    })
+    .attr('x', 0)
+    .attr('height', yScale.bandwidth())
+    .attr('width', d => {
+      console.log(xScale(d.cnt));
+      return xScale(d.cnt);
+    });
+
+  bcXAxis.call(axisBottom(xScale));
+  bcYAxis.call(axisLeft(yScale));
+
+  console.log(stateData);
+  select('tbody')
+    .selectAll('tr')
+    .data(
+      stateData.map(({org, search_count, comment}) => ({
+        org,
+        search_count,
+        comment,
+      })),
+    )
+    .join('tr')
+    .selectAll('td')
+    .data((d, i) => Object.values(d))
+    .join('td')
+    .text(d => d);
 }
