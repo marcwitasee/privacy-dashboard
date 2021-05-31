@@ -1,20 +1,13 @@
-// if the data you are going to import is small, then you can import it using es6 import
-// (I like to use use screaming snake case for imported json)
-// import MY_DATA from './app/data/example.json'
-
-import {myExampleUtil} from './utils';
 import {select, selectAll} from 'd3-selection';
 import {geoPath, geoAlbersUsa} from 'd3-geo';
 import {json} from 'd3-fetch';
-import {scaleQuantize, scaleBand, scaleLinear} from 'd3-scale';
+import {scaleQuantize, scaleBand, scaleLinear, scaleSymlog} from 'd3-scale';
 import {extent} from 'd3-array';
 import {axisBottom, axisLeft} from 'd3-axis';
 import {transition} from 'd3-transition';
 
-// this command imports the css file, if you remove it your css wont be applied!
 import './main.css';
 
-// this is just one example of how to import data. there are lots of ways to do it!
 Promise.all([
   json('./notebooks/data/clearview_ai_data.json'),
   json('./data/gz_2010_us_040_00_5m.json'),
@@ -24,11 +17,12 @@ Promise.all([
     console.log(e);
   });
 
+// main function
+
 function myVis(data) {
-  // Static map elements
   const [visData, geoData] = data;
 
-  console.log(visData);
+  // prep map data
 
   const grouped = Object.values(
     visData.reduce((acc, row) => {
@@ -50,6 +44,8 @@ function myVis(data) {
     }, {}),
   );
 
+  // Map elements
+
   const mapWidth = 700;
   const mapHeight = 475;
   const mapMargin = {top: 0, bottom: 0, left: 0, right: 0};
@@ -61,9 +57,8 @@ function myVis(data) {
   const mapContainer = select('#map')
     .append('div')
     .attr('class', 'map-container');
-  // .style('position', 'relative');
 
-  const mapSvg = mapContainer
+  mapContainer
     .append('svg')
     .attr('height', mapHeight)
     .attr('width', mapWidth)
@@ -82,6 +77,8 @@ function myVis(data) {
 
   const myGeoPath = geoPath(projection);
 
+  // Plot the map
+
   select('#map-paths')
     .selectAll('path')
     .data(geoData.features)
@@ -98,97 +95,62 @@ function myVis(data) {
     .attr('id', d => d.state)
     .attr('fill', '#FF715B')
     .attr('opacity', 0.7)
-    .attr('cx', d => {
-      if (d.long) return projection([d.long, d.lat])[0];
-    })
-    .attr('cy', d => {
-      return d.long ? projection([d.long, d.lat])[1] : null;
-    })
+    .attr('cx', d => (d.long ? projection([d.long, d.lat])[0] : null))
+    .attr('cy', d => (d.long ? projection([d.long, d.lat])[1] : null))
     .attr('r', d => quantizeScale(d.count))
     .on('mouseenter', (e, d) => {
-      console.log(d);
-      console.log(e);
       let name = d.state;
       let c = d.count;
+      console.log([d]);
+
+      select('#tooltip > div').remove();
+
       tooltip
         .style('display', 'block')
         .style('left', `${e.clientX}px`)
         .style('top', `${e.clientY}px`)
+        .style('background-color', '#FFC914')
+        .append('div')
         .text(`${name} - ${c} agencies`);
 
       select(e.target)
+        .transition()
+        .duration(300)
         .attr('opacity', 0.9)
         .attr('stroke', 'white')
-        .attr('r', `${quantizeScale(d.count) * 1.5}`);
+        .attr('r', `${quantizeScale(d.count) + 7}`);
     })
     .on('mouseleave', (e, d) => {
       select(e.target)
+        .transition()
+        .duration(300)
         .attr('opacity', 0.7)
         .attr('stroke', 'none')
         .attr('r', `${quantizeScale(d.count)}`);
+      select('#tooltip')
+        .transition()
+        .duration(300)
+        .style('background-color', '#F8F4F9');
+
+      let selected_state = select('.selected-circle').data()[0];
+      console.log(selected_state);
+      select('#tooltip > div').remove();
+      tooltip
+        .style('display', 'block')
+        .style('left', `${e.clientX}px`)
+        .style('top', `${e.clientY}px`)
+        .style('background-color', '#FFC914')
+        .append('div')
+        .text(`${selected_state.state} - ${selected_state.count} agencies`);
     });
 
-  selectAll('.state-circles').on('click', event => {
-    console.log(event.target);
-    const targetData = event.target['__data__'];
-    select('.selected-circle')
-      .attr('fill', '#FF715B')
-      .attr('class', 'state-circles');
-    select(`#${event.target.id}`)
-      .attr('fill', '#76B041')
-      .attr('class', 'selected-circle state-circles');
-    select('#bar-chart > svg').remove();
+  // Bar chart elements
 
-    barChart(visData, targetData.state);
-  });
-}
-
-function barChart(data, state) {
-  // remove current chart title first
-  select('#bar-chart-title > h2').remove();
-  select('#bar-chart-title')
-    .append('h2')
-    .text(
-      `How Often Did Agencies in ${state} Allegedly Search Clearview AI's Face Database?`,
-    );
-
-  const t = transition().duration(500);
   const bcHeight = 350;
   const bcWidth = 550;
   const bcMargin = {top: 0, bottom: 40, left: 80, right: 10};
   const bcPlotHeight = bcHeight - bcMargin.top - bcMargin.bottom;
   const bcPlotWidth = bcWidth - bcMargin.left - bcMargin.right;
-
-  const stateData = data.filter(el => el.state == state);
-
-  const grouped = Object.entries(
-    stateData.reduce((acc, row) => {
-      acc[row['search_count']] = (acc[row['search_count']] || 0) + 1;
-      return acc;
-    }, {}),
-  ).map(([cntRange, cnt]) => ({cntRange, cnt}));
-
-  console.log(grouped);
-
-  const xDomain = extent(grouped, d => d.cnt);
-  const yDomain = extent(grouped, d => d.cntRange);
-
-  const yScale = scaleBand()
-    .domain([
-      '1-5',
-      '6-10',
-      '11-50',
-      '51-100',
-      '101-500',
-      '501-1000',
-      '1001-5000',
-    ])
-    .range([0, bcPlotHeight]);
-  const xScale = scaleLinear()
-    .domain([0, xDomain[1]])
-    .range([0, bcPlotWidth]);
-
-  console.log(xDomain, yDomain);
 
   const bcSvg = select('#bar-chart')
     .append('svg')
@@ -224,56 +186,114 @@ function barChart(data, state) {
     .attr('text-anchor', 'middle')
     .text('No. of Agencies');
 
-  console.log(stateData);
-  select('#table-title > h2').remove();
-  select('#table-title')
-    .append('h2')
-    .text(`Agencies in ${state} Reported to Use Clearview AI`);
+  const rectContainer = bcSvg.append('g').attr('class', 'rect-container');
 
-  select('table').attr('hidden', null);
-  select('tbody')
-    .selectAll('tr')
-    .data(
-      stateData.map(({org, search_count, comment}) => ({
-        org,
-        search_count,
-        comment,
-      })),
-    )
-    .join('tr')
-    .selectAll('td')
-    .data((d, i) => Object.values(d))
-    .join('td')
-    .text(d => d);
+  function barChart(data, state) {
+    // remove current chart title first
+    select('#bar-chart-title > h2').remove();
+    select('#bar-chart-title')
+      .append('h2')
+      .text(
+        `How Often Did Agencies in ${state} Allegedly Search Clearview AI's Face Database?`,
+      );
 
-  const updateBarChart = function(grouped) {
-    bcSvg
-      .append('g')
-      .attr('class', 'rect-container')
-      .selectAll('rect')
-      .data(grouped)
-      .join(
-        enter =>
-          enter
-            .append('rect')
-            .attr('x', 0)
-            .attr('width', d => xScale(d.cnt))
-            .attr('y', d => yScale(d.cntRange)),
-        update =>
-          update.call(el =>
-            el
-              .transition(t)
+    select('#bar-chart').attr('hidden', null);
+
+    const t = transition().duration(500);
+
+    const stateData = data.filter(el => el.state == state);
+
+    console.log(stateData);
+
+    const grouped = Object.entries(
+      stateData.reduce((acc, row) => {
+        acc[row['search_count']] = (acc[row['search_count']] || 0) + 1;
+        return acc;
+      }, {}),
+    ).map(([cntRange, cnt]) => ({cntRange, cnt}));
+
+    const xDomain = extent(grouped, d => d.cnt);
+
+    const yScale = scaleBand()
+      .domain([
+        '1-5',
+        '6-10',
+        '11-50',
+        '51-100',
+        '101-500',
+        '501-1000',
+        '1001-5000',
+        '5001+',
+      ])
+      .range([0, bcPlotHeight]);
+
+    const xScale = scaleLinear()
+      .domain([0, xDomain[1]])
+      .range([0, bcPlotWidth]);
+
+    // Table
+    select('#table-title > h2').remove();
+    select('#table-title')
+      .append('h2')
+      .text(`Agencies in ${state} Reported to Use Clearview AI`);
+
+    select('table').attr('hidden', null);
+
+    select('tbody')
+      .selectAll('tr')
+      .data(
+        stateData.map(({org, search_count, comment}) => ({
+          org,
+          search_count,
+          comment,
+        })),
+      )
+      .join('tr')
+      .selectAll('td')
+      .data((d, i) => Object.values(d))
+      .join('td')
+      .text(d => d);
+
+    function updateBarChart(grouped) {
+      rectContainer
+        .selectAll('rect')
+        .data(grouped)
+        .join(
+          enter =>
+            enter
+              .append('rect')
               .attr('x', 0)
               .attr('width', d => xScale(d.cnt))
               .attr('y', d => yScale(d.cntRange)),
-          ),
-      )
-      .attr('fill', '#17BEBB')
-      .attr('stroke', 'white')
-      .attr('height', yScale.bandwidth());
+          update =>
+            update.call(el =>
+              el
+                .transition(t)
+                .attr('x', 0)
+                .attr('width', d => xScale(d.cnt))
+                .attr('y', d => yScale(d.cntRange)),
+            ),
+        )
+        .attr('fill', '#17BEBB')
+        .attr('stroke', 'white')
+        .attr('height', yScale.bandwidth());
 
-    bcXAxis.call(axisBottom(xScale));
-    bcYAxis.call(axisLeft(yScale));
-  };
-  updateBarChart(grouped);
+      bcXAxis.call(axisBottom(xScale));
+      bcYAxis.call(axisLeft(yScale));
+    }
+    updateBarChart(grouped);
+  }
+
+  selectAll('.state-circles').on('click', event => {
+    console.log(event.target);
+    const targetData = event.target['__data__'];
+    select('.selected-circle')
+      .attr('fill', '#FF715B')
+      .attr('class', 'state-circles');
+    select(`#${event.target.id}`)
+      .attr('fill', '#76B041')
+      .attr('class', 'selected-circle state-circles');
+
+    barChart(visData, targetData.state);
+  });
 }
