@@ -2,7 +2,6 @@ proposal/
 chromedriver*
 web_scraper/venv/
 web_scraper/.idea/*
-notebooks/
+notebooks/.ipynb_checkpoints
 privacy-dash-main.zip
 node_modules/
-data/
