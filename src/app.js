@@ -194,7 +194,7 @@ function myVis(data) {
     select('#bar-chart-title')
       .append('h2')
       .text(
-        `How Often Did Agencies in ${state} Allegedly Search Clearview AI's Database?`,
+        `How Many Times Did Agencies in ${state} Reportedly Search Clearview AI's Database?`,
       );
 
     select('#bar-chart').attr('hidden', null);
@@ -316,5 +316,11 @@ function myVis(data) {
       .style('background-color', '#F8F4F9');
 
     barChart(visData, targetData.state);
+
+    window.scrollTo({
+      top: 600,
+      left: 500,
+      behavior: 'smooth',
+    });
   });
 }
