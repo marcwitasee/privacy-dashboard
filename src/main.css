@@ -1,6 +1,6 @@
-
 a {
   cursor: pointer;
+  font-weight: bold;
 }
 
 html,
@@ -17,6 +17,7 @@ h2 {
 table {
   border-collapse: collapse;
   border-spacing: 20px;
+  max-width: 750px;
 }
 
 th {
@@ -33,7 +34,7 @@ td {
   padding-bottom: 5px;
 }
 
-#map-title > h4 {
+#map-title > h4, h5 {
   text-align: center;
 }
 
@@ -83,6 +84,20 @@ td {
   font-weight: bold;
   width: 185px;
   text-align: center;
+  margin-top: 20px;
+}
+
+#laws-link {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  background-color: #4C5454;
+  color: #F8F4F9;
+  text-align: center;
+  width: 80%;
+  border-radius: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  min-width: 500px;
 }
 
 #bar-chart-title {
@@ -91,14 +106,15 @@ td {
 }
 
 #sources {
-  margin-top: 20px;
+  margin-top: 30px;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   width: 80%;
 }
 
 #sources > h4 {
   margin: 0 0 0 0;
+  margin-right: 10px;
 }
 
 #column-two {
@@ -112,10 +128,12 @@ td {
   background-color: #FFC914;
   opacity: 80%;
   border-radius: 10px;
-  border: 1px solid black;
   width: 80%;
-  margin-top: 50px;
-  min-width: 375px;
+  margin-top: 10px;
+  min-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #info-box-title {
@@ -125,24 +143,59 @@ td {
   margin-right: 10px;
 }
 
-#info-box > p {
+#info-box, #clearview-info > p {
   margin-left: 15px;
   margin-right: 5px;
 }
 
+.color-link {
+  color: #4C5454;
+}
+
+.reg-link {
+  color: #6184D8;
+}
+
 #learn-button {
-  margin-top: 20px;
+  margin-top: 0px;
   margin-bottom: 20px;
 }
 
 #learn-button > button {
-  background-color: #FFC914;
+  background-color: #FF715B;
   border-radius: 10px;
+  height: 50px;
+  width: 150px;
 }
 
-#learn-button > button > p {
+#learn-button > button > a {
   font-size: 20px;
   font-weight: bold;
+}
+
+#clearview-info {
+  background-color: #77ACA2;
+  border-radius: 10px;
+  opacity: .8;
+  width: 80%;
+  min-width: 500px;
+}
+
+#clearview-title {
+  float: left;
+  width: 30%;
+  margin-left: 15px;
+  margin-right: 10px;
+}
+
+#state-div {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-top: 30px;
+  margin-left: 50px;
+  margin-right: 50px;
+  justify-content: space-around;
+  width: 100%;
 }
 
 #footer {

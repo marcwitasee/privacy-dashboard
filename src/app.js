@@ -1,7 +1,7 @@
 import {select, selectAll} from 'd3-selection';
 import {geoPath, geoAlbersUsa} from 'd3-geo';
 import {json} from 'd3-fetch';
-import {scaleQuantize, scaleBand, scaleLinear, scaleSymlog} from 'd3-scale';
+import {scaleQuantize, scaleBand, scaleLinear} from 'd3-scale';
 import {extent} from 'd3-array';
 import {axisBottom, axisLeft} from 'd3-axis';
 import {transition} from 'd3-transition';
@@ -46,13 +46,13 @@ function myVis(data) {
 
   // Map elements
 
-  const mapWidth = 700;
-  const mapHeight = 475;
+  const mapWidth = 750;
+  const mapHeight = 550;
   const mapMargin = {top: 0, bottom: 0, left: 0, right: 0};
 
   const quantizeScale = scaleQuantize()
     .domain([0, 140])
-    .range([2, 4, 8, 12, 18, 26, 36]);
+    .range([4, 6, 9, 13, 18, 24, 31]);
 
   const mapContainer = select('#map')
     .append('div')
@@ -72,7 +72,7 @@ function myVis(data) {
     .style('display', 'none');
 
   const projection = geoAlbersUsa()
-    .scale(950)
+    .scale(1048)
     .translate([mapWidth / 2, mapHeight / 2]);
 
   const myGeoPath = geoPath(projection);
@@ -101,7 +101,6 @@ function myVis(data) {
     .on('mouseenter', (e, d) => {
       let name = d.state;
       let c = d.count;
-      console.log([d]);
 
       select('#tooltip > div').remove();
 
@@ -111,6 +110,9 @@ function myVis(data) {
         .style('top', `${e.clientY}px`)
         .style('background-color', '#FFC914')
         .append('div')
+        .transition()
+        .delay(100)
+        .duration(250)
         .text(`${name} - ${c} agencies`);
 
       select(e.target)
@@ -129,19 +131,17 @@ function myVis(data) {
         .attr('r', `${quantizeScale(d.count)}`);
       select('#tooltip')
         .transition()
-        .duration(300)
+        .duration(100)
         .style('background-color', '#F8F4F9');
 
       let selected_state = select('.selected-circle').data()[0];
-      console.log(selected_state);
-      select('#tooltip > div').remove();
-      tooltip
-        .style('display', 'block')
-        .style('left', `${e.clientX}px`)
-        .style('top', `${e.clientY}px`)
-        .style('background-color', '#FFC914')
-        .append('div')
-        .text(`${selected_state.state} - ${selected_state.count} agencies`);
+      if (selected_state) {
+        select('#tooltip > div')
+          .transition()
+          .delay(500)
+          .duration(1000)
+          .text(`${selected_state.state} - ${selected_state.count} agencies`);
+      }
     });
 
   // Bar chart elements
@@ -169,7 +169,7 @@ function myVis(data) {
   bcSvg
     .append('g')
     .attr('class', 'y-axis-label')
-    .attr('transform', `translate(-60, ${bcPlotHeight / 2})`)
+    .attr('transform', `translate(-65, ${bcPlotHeight / 2})`)
     .append('text')
     .attr('text-anchor', 'middle')
     .attr('transform', 'rotate(-90)')
@@ -194,12 +194,12 @@ function myVis(data) {
     select('#bar-chart-title')
       .append('h2')
       .text(
-        `How Often Did Agencies in ${state} Allegedly Search Clearview AI's Face Database?`,
+        `How Often Did Agencies in ${state} Allegedly Search Clearview AI's Database?`,
       );
 
     select('#bar-chart').attr('hidden', null);
 
-    const t = transition().duration(500);
+    const t = transition().duration(1000);
 
     const stateData = data.filter(el => el.state == state);
 
@@ -285,7 +285,6 @@ function myVis(data) {
   }
 
   selectAll('.state-circles').on('click', event => {
-    console.log(event.target);
     const targetData = event.target['__data__'];
     select('.selected-circle')
       .attr('fill', '#FF715B')
@@ -293,6 +292,28 @@ function myVis(data) {
     select(`#${event.target.id}`)
       .attr('fill', '#76B041')
       .attr('class', 'selected-circle state-circles');
+
+    select('#bar-chart-title')
+      .transition()
+      .duration(500)
+      .style('background-color', '#FFC914');
+
+    select('#bar-chart-title')
+      .transition()
+      .delay(1000)
+      .duration(500)
+      .style('background-color', '#F8F4F9');
+
+    select('#table-title')
+      .transition()
+      .duration(500)
+      .style('background-color', '#FFC914');
+
+    select('#table-title')
+      .transition()
+      .delay(1000)
+      .duration(500)
+      .style('background-color', '#F8F4F9');
 
     barChart(visData, targetData.state);
   });

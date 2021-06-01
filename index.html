@@ -17,18 +17,11 @@
               Exploring Public Agency Use of Clearview AI's Facial Recognition Across US States
             </h2>
             <h4>
-              The map below shows the number of agencies in each state reported to have conducted at least one facial recognition search on Clearview AI's database.
+              Each dot on the map below represents the total unique number of agencies in each state reported to have conducted at least one facial recognition search on Clearview AI's database between 2018 and Feb. 2020.
             </h4>
+            <h5>Click on a dot and scroll down to see information about which public agencies in a state reportedly used the technology and how often.</h5>
           </div>
           <div id="map"></div>
-          <div id="bar-chart-title"><h2></h2></div>
-          <div id="bar-chart" hidden></div>
-          <div id="sources">
-            <h4>Sources:</h4>
-            <a href="https://www.buzzfeednews.com/article/ryanmac/facial-recognition-local-police-clearview-ai-table">
-              All data used on this dashboard comes from Buzzfeed.
-            </a>
-          </div>
         </div>
         <div id="column-two">
           <div id="info-box-container">
@@ -36,15 +29,31 @@
               <div id="info-box-title">
                 <h3>How Does Facial Recognition Affect Your Privacy?</h3>
               </div>
-              <p>Facial regcognition softwares are technologies that use artificial intelligence to identify faces in images and videos and match them with other faces stored in a database. As the map on the left shows, the use of facial recognition has exploded in the past few years, particularly among public agencies. Images collected from public spaces can be subject to the software.These technologies can be used to identify you in images by comparing your face with many other faces collected online (often through social media accounts without user permission). In some cases, public agencies have reportedly used facial recognition to identify, locate, and deport undocumented immigrants from the country. Community awareness and transparency of the use of such invasive technologies is essential to protecting your rights to sanctuary.</p>
-              <p>Click on a state on the map to see more information about the public agencies in that state that allegedly used Clearview AI's facial recognition software.</p>
+              <p>Facial regcognition softwares are technologies that use artificial intelligence to identify faces in images and videos. It can also be used to identify people and categorize them by personal characteristics, such as gender or race. As the map on the left shows, the use of facial recognition is on the rise in the United States, particularly among public agencies like police departments. In some cases, there are concerns that public agencies could used facial recognition <a class='color-link' href="https://thehill.com/policy/technology/548932-pressure-mounts-on-dhs-to-stop-using-clearview-ai-facial-recognition">to identify, locate, and deport undocumented immigrants</a> from the country as well as <a class='color-link' href="https://www.theverge.com/2020/8/18/21373316/nypd-facial-recognition-black-lives-matter-activist-derrick-ingram">track protestors attending Black Lives Matter rallies</a>. Community awareness and transparency of the use of such invasive technologies is essential to protecting your privacy.</p>
+            </div>
+            <div id="learn-button">
+              <button>
+                  <a class="color-link" href="https://www.aclu.org/issues/national-security/privacy-and-surveillance">Learn More</a>
+              </button>
             </div>
           </div>
-          <div id="learn-button">
-            <button>
-              <p>Learn More</p>
-            </button>
+          <div id='laws-link'>Look up US state and local laws regulating the use of facial recognition technology <a class='reg-link' href="https://epic.org/state-policy/facialrecognition/">here</a>!</div>
+          <div id="clearview-info">
+            <div id="clearview-title">
+              <h3>What is Clearview AI?</h3>
+            </div>
+            <p><a class="color-link" href="https://www.nytimes.com/2020/01/18/technology/clearview-privacy-facial-recognition.html">Clearview AI</a> is a private company that sells a facial recognition software, which enables users to upload an image of a person and get back results of other pictures in which the person appears on the Internet. Clearview AI's software is built on a massive database of images that the company collected from social media accounts and other online sources. As some of these images may be linked to personal identifying information, Clearview AI's software poses a grave threat to people's privacy. Furthermore, it is unclear how well the technology accurately identifies persons in images that are uploaded.</p>
           </div>
+          <div id="sources">
+            <h4>Sources:</h4>
+            <a class='reg-link' href="https://www.buzzfeednews.com/article/ryanmac/facial-recognition-local-police-clearview-ai-table">
+              All data used on this dashboard come from Buzzfeed.
+            </a>
+          </div>
+        </div>
+      </div>
+      <div id="state-div">
+        <div>
           <div id="table-title">
             <h2></h2>
           </div>
@@ -60,6 +69,10 @@
               <tbody></tbody>
             </table>
           </div>
+        </div>
+        <div>
+          <div id="bar-chart-title"><h2></h2></div>
+          <div id="bar-chart" hidden></div>
         </div>
       </div>
       <div id="footer"></div>
